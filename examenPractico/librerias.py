@@ -31,9 +31,11 @@ plt.subplot(rowsPlot,colsPlot,2),plt.imshow(image)
 plt.title('Original'), plt.xticks([]), plt.yticks([])
 
 kernelPromedio = np.matrix('1 4 7 4 1; 4 16 26 16 4; 7 26 41 26 7; 4 16 26 16 4; 1 4 7 4 1')
-sobelX = np.matrix('-2 0 2; -6 0 6; -2 0 2')
+#sobelX = np.matrix('-2 0 2; -6 0 6; -2 0 2')
 #sobelY = np.matrix('-1 -2 -1; 0 0 0; 1 2 1')
-sobelY = np.matrix('0 0 0; 0 2 0; 0 0 0')
+sobelX = np.matrix('-3 0 3; -10 0 10; -3 0 3')
+sobelY = np.matrix('-3 -10 -3; 0 0 0; 3 10 3')
+#sobelY = np.matrix('0 0 0; 0 2 0; 0 0 0')
 promedioPixel = 0
 promedioSobelX = 0
 promedioSobelY = 0
@@ -47,8 +49,8 @@ plt.title('Kernel'), plt.xticks([]), plt.yticks([])
 imagePonderada = np.zeros(shape=(imageHeight,imageWidth), dtype=np.float)
 for y in range(0, imageHeight-1):
 	for x in range(0, imageWidth-1):
-		(bl,gr,re) = image[x,y]
-		imagePonderada[x,y] = float(re) / 255
+		(bl,gr,re) = image[y,x]
+		imagePonderada[y,x] = float(re) / 255
 plt.subplot(rowsPlot,colsPlot,3),plt.imshow(imagePonderada, cmap = 'gray')
 plt.title('Ponderada'), plt.xticks([]), plt.yticks([])
 print ("{}".format(imagePonderada))
@@ -70,7 +72,7 @@ imagenTemp = imagenBorrosa.copy()
 
 for y in range(0, imageHeight-1):
 	for x in range(0, imageWidth-1):
-		imagenTemp[x,y] = imagePonderada[x,y] - imagenBorrosa [x,y]
+		imagenTemp[y,x] = imagePonderada[y,x] - imagenBorrosa [y,x]
 		
 plt.subplot(rowsPlot,colsPlot,5),plt.imshow(imagenTemp, cmap = 'gray')
 plt.title('Ponderada - Blurred'), plt.xticks([]), plt.yticks([])
@@ -103,7 +105,7 @@ sobelCombined = imagePonderada.copy()
 #Sacamos la magnitud del gradiente con la raiz de la suma de los cuadrados
 for y in range(0, imageHeight-1):
 	for x in range(0, imageWidth-1):
-		sobelCombined[x,y] = math.sqrt((imagenSobelY[x,y] ** 2 )+(imagenSobelX[x,y]**2)) 
+		sobelCombined[y,x] = math.sqrt((imagenSobelY[y,x] ** 2 )+(imagenSobelX[y,x]**2)) 
 #sobelCombined = cv2.bitwise_or(imagenSobelX, imagenSobelY)
 plt.subplot(rowsPlot,colsPlot,8),plt.imshow(sobelCombined, cmap = 'gray')
 plt.title('SobelCombined'), plt.xticks([]), plt.yticks([])
