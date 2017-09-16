@@ -39,12 +39,14 @@ print ("{}".format(sobelX))
 print ("{}".format(sobelY))
 cv2.imshow("Ponderada", imagePonderada)
 
-imagenBorrosa = image.copy()
+
 margin = int(tamanoKernel/2)
 #print("Margin: {}".format(margin))
 ancho = imageWidth-tamanoKernel
 alto = imageHeight- tamanoKernel
 
+#gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+imagenBorrosa = imagePonderada.copy()
 
 #Empezamos a recorrer los pixeles de cada imagen para el proceso de convolucion
 for y in range(margin, ancho):
@@ -56,18 +58,20 @@ for y in range(margin, ancho):
 		promedioPixel = promedioPixel / factorSaturacion 
 		imagenBorrosa[x,y] = promedioPixel
 		promedioPixel = 0
-
-
 plt.subplot(2,2,1),plt.imshow(imagenBorrosa)
 plt.title('Blurred'), plt.xticks([]), plt.yticks([])
 
 imagenSobelX = imagenBorrosa.copy()
+imagenSobelY = imagenBorrosa.copy()
+imagenTemp = imagenBorrosa.copy()
+
+
 #Aplicamos mascaras de Sobel
 for c in range(1, imageHeight-3):
 	for n in range(1, imageWidth-3):
 		for m in range (0, 2):
 			for v in range(0, 2):
-				(b,g,r) = imagenBorrosa[c+v,n+m]
+				(b,g,r) = imagenTemp[c+v,n+m]
 				promedioSobelX  = promedioSobelX + (b * sobelX[v,m])
 		imagenSobelX[c,n] = promedioSobelX
 		promedioSobelX = 0
@@ -75,26 +79,23 @@ plt.subplot(2,2,3),plt.imshow(imagenSobelX)
 plt.title('SobelX'), plt.xticks([]), plt.yticks([])
 #cv2.imshow("SobelX", imagenSobelX)
 
-
-imagenSobelY = imagenBorrosa.copy()
 #Aplicamos mascaras de Sobel
 for t in range(1, imageHeight-3):
 	for f in range(1, imageWidth-3):
 		for p in range (0, 2):
 			for o in range(0, 2):
-				(b,g,r) = imagenBorrosa[t+o,f+p]
-				promedioSobelY  = promedioSobelY + (g * sobelY[o,p])
+				(bl,gr,re) = imagenBorrosa[t+o,f+p]
+				promedioSobelY  = promedioSobelY + (bl * sobelY[o,p])
 		imagenSobelY[t,f] = promedioSobelY
 		promedioSobelY = 0
 plt.subplot(2,2,2),plt.imshow(imagenSobelY)
 plt.title('SobelY'), plt.xticks([]), plt.yticks([])
 #cv2.imshow("SobelY", imagenSobelY)
 
-
 sobelCombined = cv2.bitwise_or(imagenSobelX, imagenSobelY)
+sobelCombined = cv2.cvtColor(sobelCombined, cv2.COLOR_BGR2GRAY)
 plt.subplot(2,2,4),plt.imshow(sobelCombined)
 plt.title('SobelCombined'), plt.xticks([]), plt.yticks([])
-
 plt.show()
 
 cv2.waitKey(0)
