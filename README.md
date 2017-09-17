@@ -4,7 +4,7 @@ This repository is intended to show all the work developed in the Computer Visio
 
 The structure of the repository is based on folders that show every exercises of a specific partial test
 
-### For the first partial we applied:
+## For the first partial (examenPractico folder) we applied:
 
 * Gaussian blur
 * Sobel algorithm
